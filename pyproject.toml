@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcnr"
+version = "0.1.0"
+description = "A multi-channel noise reduction package"
+authors = [
+    { name = "Shinya Fujie", email = "shinya.fujie@p.chibakoudai.jp" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+dependencies = [
+    "librosa",
+    "soundfile",
+    "numpy",
+]
+
+[project.scripts]
+mcnr = "mcnr.main:main"
