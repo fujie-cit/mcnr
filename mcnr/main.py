@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--input", "-i", type=str, help="Input audio file", required=True)
     parser.add_argument("--fft_size", type=int, default=512, help="FFT size (default: 512)")
     parser.add_argument("--hop_size", type=int, default=128, help="Hop size (default: 128)")
+    parser.add_argument("--chunk_size", type=int, default=None, help="Chunk size (default: None)")
     parser.add_argument("output", type=str, help="Output audio file")
 
     args = parser.parse_args()
@@ -39,7 +40,7 @@ def main():
     x = load_audio_file(args.input)
 
     # Apply multi-channel noise reduction
-    x = do_multi_channel_noise_reduction(x, fft_size=args.fft_size, hop_size=args.hop_size)
+    x = do_multi_channel_noise_reduction(x, fft_size=args.fft_size, hop_size=args.hop_size, chunk_size=args.chunk_size)
 
     # Save the output audio file
     save_audio_file(args.output, x)

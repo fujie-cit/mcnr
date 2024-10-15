@@ -41,7 +41,7 @@ def proc_istft(d, hop_size=128):
     return x
 
 
-def do_multi_channel_noise_reduction(x, fft_size=512, hop_size=128):
+def do_multi_channel_noise_reduction_(x, fft_size=512, hop_size=128):
     """Apply multi-channel noise reduction to an audio signal.
 
     Example:
@@ -59,6 +59,7 @@ def do_multi_channel_noise_reduction(x, fft_size=512, hop_size=128):
     Returns:
         np.ndarray: Output audio signal. (n_channels, n_samples)
     """
+
     # Compute the short-time Fourier transform of the audio signal
     d = proc_stft(x, fft_size=fft_size, hop_size=hop_size)
 
@@ -69,3 +70,39 @@ def do_multi_channel_noise_reduction(x, fft_size=512, hop_size=128):
     x = proc_istft(d, hop_size=hop_size)
 
     return x
+
+
+def do_multi_channel_noise_reduction(x, fft_size=512, hop_size=128, chunk_size=None):
+    """Apply multi-channel noise reduction to an audio signal.
+
+    Example:
+        x = do_multi_channel_noise_reduction(x, fft_size=512, hop_size=128, chunk_size=16000)
+
+    Note:
+        The input audio signal must have shape (n_channels, n_samples).
+        Data type of the input audio signal must be float.
+
+    Args:
+        x (np.ndarray): Input audio signal. (n_channels, n_samples)
+        fft_size (int): FFT size (default: 512)
+        hop_size (int): Hop size (default: 128)
+        chunk_size (int): Chunk size (default: None)
+
+
+    Returns:
+        np.ndarray: Output audio signal. (n_channels, n_samples)
+    """
+    if chunk_size is None:
+        return do_multi_channel_noise_reduction_(x, fft_size=fft_size, hop_size=hop_size)
+
+    y = np.zeros_like(x)
+
+    for i in range(0, x.shape[1], chunk_size):
+        x_chunk = x[:, i:i+chunk_size]
+        y_chunk = do_multi_channel_noise_reduction_(x_chunk, fft_size=fft_size, hop_size=hop_size)
+        if y_chunk.shape[1] < chunk_size:
+            y[:, i:i+y_chunk.shape[1]] = y_chunk
+        else:
+            y[:, i:i+chunk_size] = y_chunk
+
+    return y
