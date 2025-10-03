@@ -9,12 +9,12 @@ def load_audio_file(filename):
     y = y.T
 
     # check if sr is 16000
-    assert sr == 16000, f"Sample rate of {sr} is not supported. Please resample to 16000."
+    # assert sr == 16000, f"Sample rate of {sr} is not supported. Please resample to 16000."
 
     # check if y is multi-channel
     assert y.shape[0] > 1, f"Input audio file is not multi-channel."
 
-    return y
+    return y, sr
 
 
 def save_audio_file(filename, x, sr=16000):
@@ -37,13 +37,13 @@ def main():
     args = parser.parse_args()
 
     # Load an audio file
-    x = load_audio_file(args.input)
+    x, sr = load_audio_file(args.input)
 
     # Apply multi-channel noise reduction
     x = do_multi_channel_noise_reduction(x, fft_size=args.fft_size, hop_size=args.hop_size, chunk_size=args.chunk_size)
 
     # Save the output audio file
-    save_audio_file(args.output, x)
+    save_audio_file(args.output, x, sr=sr)
 
 if __name__ == "__main__":
     main()

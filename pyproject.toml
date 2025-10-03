@@ -12,9 +12,9 @@ authors = [
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
-    "librosa",
+    "librosa>=0.10.0",
     "soundfile",
-    "numpy",
+    "numpy>=1.20.0,<2.0.0"
 ]
 
 [project.scripts]
